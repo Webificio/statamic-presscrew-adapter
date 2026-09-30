@@ -1,0 +1,28 @@
+{
+    "name": "presscrew/statamic-adapter",
+    "description": "PressCrew Adapter: riceve articoli dalla piattaforma PressCrew e li pubblica (o li salva in bozza) in una collezione Statamic.",
+    "type": "statamic-addon",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "statamic/cms": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PressCrew\\Adapter\\": "src/"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "PressCrew Adapter",
+            "description": "Riceve articoli dalla piattaforma PressCrew e li pubblica in Statamic"
+        },
+        "laravel": {
+            "providers": [
+                "PressCrew\\Adapter\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
