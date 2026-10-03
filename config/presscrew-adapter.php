@@ -2,36 +2,36 @@
 
 return [
 
-    // Se false, la rotta di ricezione non viene registrata.
+    // When false, the receiving route is not registered.
     'enabled' => env('PRESSCREW_ADAPTER_ENABLED', true),
 
-    // Token atteso nell'header "Authorization: Bearer <token>". Senza token tutte le richieste sono rifiutate.
+    // Token expected in the "Authorization: Bearer <token>" header. Without a token every request is rejected.
     'token' => env('PRESSCREW_ADAPTER_TOKEN'),
 
-    // URL della rotta (POST) e limite di richieste "max,minuti".
+    // URL of the (POST) route and rate limit as "max,minutes".
     'route' => env('PRESSCREW_ADAPTER_ROUTE', 'webhooks/presscrew'),
     'throttle' => env('PRESSCREW_ADAPTER_THROTTLE', '30,1'),
 
-    // Collezione e blueprint in cui creare gli articoli.
+    // Collection and blueprint where articles are created.
     'collection' => env('PRESSCREW_ADAPTER_COLLECTION', 'blog'),
     'blueprint' => env('PRESSCREW_ADAPTER_BLUEPRINT', 'articolo'),
 
-    // Collezioni a cui PressCrew può pubblicare, con i campi del blueprint che può compilare l'AI.
-    // Vuoto = solo la collezione qui sopra, senza campi compilati dall'AI. Lo schema è letto da GET <route>/schema.
-    // Tipi supportati: text, textarea, markdown, select, radio, button_group, integer, toggle.
+    // Collections PressCrew may publish to, with the blueprint fields the AI may fill in.
+    // Empty = only the collection above, with no AI-filled fields. The schema is served by GET <route>/schema.
+    // Supported types: text, textarea, markdown, select, radio, button_group, integer, toggle.
     // 'collections' => [
-    //     'blog' => ['blueprint' => 'articolo', 'fields' => ['seo_title', 'meta_description', 'category']],
+    //     'blog' => ['blueprint' => 'article', 'fields' => ['seo_title', 'meta_description', 'category']],
     // ],
     'collections' => [],
 
-    // Fuso orario per la data di default degli articoli.
+    // Time zone for the default date of articles.
     'timezone' => env('PRESSCREW_ADAPTER_TIMEZONE', config('app.timezone')),
 
-    // Categorie ammesse. Array vuoto = il campo "category" non viene validato.
+    // Allowed categories. Empty array = the "category" field is not validated.
     'categories' => [],
 
-    // Campi opzionali inviati dalla piattaforma => regole di validazione.
-    // Vengono salvati con lo stesso handle nel blueprint della collezione.
+    // Optional fields sent by the platform => validation rules.
+    // They are saved with the same handle in the collection's blueprint.
     'fields' => [
         'excerpt' => ['nullable', 'string', 'max:500'],
         'category' => ['nullable', 'string', 'max:100'],

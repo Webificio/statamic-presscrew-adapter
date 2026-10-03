@@ -6,78 +6,80 @@ use Statamic\Facades\Collection;
 use Statamic\Fields\Blueprint;
 use Statamic\Fields\Field;
 
-/** Blueprint della pagina impostazioni: costruito a runtime con le collezioni e i campi reali del sito. */
+/** Settings page blueprint, built at runtime from the site's real collections and fields. */
 class SettingsBlueprint
 {
+    private static function t(string $key, array $replace = []): string
+    {
+        return __("statamic-adapter::settings.$key", $replace);
+    }
+
     public static function build(): array
     {
         $config = config('presscrew-adapter');
         $saved = Options::saved();
-        $route = Options::get('route');
 
         // Senza un token salvato né nel .env ne proponiamo uno nuovo: diventa valido quando si preme Salva.
         $hasToken = ! empty($saved['token']) || ! empty($config['token']);
 
+        $logo = 'data:image/svg+xml;base64,'.base64_encode(file_get_contents(__DIR__.'/../../resources/svg/logo.svg'));
+        $link = '<a href="https://presscrew.it" target="_blank" rel="noopener"><strong><u>'.self::t('promo_link').'</u></strong></a>';
+
         return ['tabs' => [
-            'connection' => ['display' => 'Connessione', 'sections' => [[
+            'connection' => ['display' => self::t('tab_connection'), 'sections' => [[
                 'fields' => [
                     ['handle' => 'discount', 'field' => [
                         'type' => 'html',
                         'display' => 'PressCrew',
-                        'html' => '<p>Non hai ancora un account? Con il codice <strong><code>PCSTATAMIC10</code></strong> ottieni il <strong>10% di sconto</strong> su PressCrew, la redazione AI che scrive nel tuo stile e pubblica su Statamic. '
-                            .'<a href="https://presscrew.it" target="_blank" rel="noopener"><strong><u>Scopri PressCrew →</u></strong></a></p>',
+                        'html' => '<a href="https://presscrew.it" target="_blank" rel="noopener"><img src="'.$logo.'" alt="PressCrew" width="200" height="52" style="margin-bottom:.75rem"></a>'
+                            .'<p>'.self::t('promo', ['code' => 'PCSTATAMIC10', 'link' => $link]).'</p>',
                     ]],
                     ['handle' => 'info', 'field' => [
                         'type' => 'html',
-                        'display' => 'Come collegare PressCrew',
-                        'html' => '<ol><li>In PressCrew aggiungi una destinazione di tipo <strong>Statamic</strong>.</li>'
-                            .'<li>URL del sito: <code>'.e(url('/')).'</code></li>'
-                            .'<li>Rotta: <code>'.e($route).'</code></li>'
-                            .'<li>Token: copia quello qui sotto <strong>dopo aver premuto Salva</strong>.</li></ol>',
+                        'display' => self::t('how_label'),
+                        'html' => self::t('how', ['url' => e(url('/')), 'route' => e(Options::get('route'))]),
                     ]],
                     ['handle' => 'enabled', 'field' => [
                         'type' => 'toggle',
-                        'display' => 'Adapter attivo',
-                        'instructions' => 'Se disattivato, il sito non riceve più articoli da PressCrew.',
+                        'display' => self::t('enabled_label'),
+                        'instructions' => self::t('enabled_instructions'),
                         'default' => true,
                     ]],
                     ['handle' => 'token', 'field' => [
                         'type' => 'text',
-                        'display' => 'Token di accesso',
-                        'instructions' => $hasToken
-                            ? 'Se vuoto si usa il token del file .env. Per cambiarlo, scrivi un valore lungo e casuale e aggiorna anche PressCrew.'
-                            : 'Generato per te: premi Salva per attivarlo, poi incollalo in PressCrew.',
+                        'display' => self::t('token_label'),
+                        'instructions' => self::t($hasToken ? 'token_has' : 'token_new'),
                         'default' => $hasToken ? null : bin2hex(random_bytes(24)),
                         'validate' => ['min:24'],
                     ]],
                 ],
             ]]],
-            'collections' => ['display' => 'Collezioni e campi', 'sections' => [
+            'collections' => ['display' => self::t('tab_collections'), 'sections' => [
                 [
-                    'display' => 'Dove pubblica PressCrew',
-                    'instructions' => 'Scegli le collezioni e, per ciascuna, i campi che l\'AI di PressCrew può compilare (titolo, testo ed estratto sono sempre inviati). Senza scelte si usa la collezione «'.$config['collection'].'» senza campi aggiuntivi.',
+                    'display' => self::t('where_label'),
+                    'instructions' => self::t('where_instructions', ['collection' => $config['collection']]),
                     'fields' => self::collectionFields(),
                 ],
             ]],
-            'advanced' => ['display' => 'Avanzate', 'sections' => [[
+            'advanced' => ['display' => self::t('tab_advanced'), 'sections' => [[
                 'fields' => [
                     ['handle' => 'route', 'field' => [
                         'type' => 'text',
-                        'display' => 'Rotta',
-                        'instructions' => 'Indirizzo che riceve gli articoli. Se le rotte sono in cache esegui `php artisan route:clear` dopo averla cambiata.',
+                        'display' => self::t('route_label'),
+                        'instructions' => self::t('route_instructions'),
                         'default' => $config['route'],
                         'validate' => ['required'],
                     ]],
                     ['handle' => 'throttle', 'field' => [
                         'type' => 'text',
-                        'display' => 'Limite di richieste',
-                        'instructions' => 'Formato «richieste,minuti», ad esempio 30,1.',
+                        'display' => self::t('throttle_label'),
+                        'instructions' => self::t('throttle_instructions'),
                         'default' => $config['throttle'],
                     ]],
                     ['handle' => 'timezone', 'field' => [
                         'type' => 'text',
-                        'display' => 'Fuso orario',
-                        'instructions' => 'Per la data degli articoli senza data, ad esempio Europe/Rome.',
+                        'display' => self::t('timezone_label'),
+                        'instructions' => self::t('timezone_instructions'),
                         'default' => $config['timezone'],
                     ]],
                 ],
@@ -91,7 +93,7 @@ class SettingsBlueprint
 
         $fields = [['handle' => 'collections', 'field' => [
             'type' => 'checkboxes',
-            'display' => 'Collezioni',
+            'display' => self::t('collections_label'),
             'options' => $collections->mapWithKeys(fn ($c) => [$c->handle() => $c->title()])->all(),
         ]]];
 
@@ -103,7 +105,7 @@ class SettingsBlueprint
             if ($blueprints->count() > 1) {
                 $fields[] = ['handle' => Options::key('blueprint', $handle), 'field' => [
                     'type' => 'select',
-                    'display' => 'Blueprint di «'.$collection->title().'»',
+                    'display' => self::t('blueprint_label', ['collection' => $collection->title()]),
                     'options' => $blueprints->mapWithKeys(fn (Blueprint $b) => [$b->handle() => $b->title()])->all(),
                     'default' => $blueprints->first()->handle(),
                     'if' => $when,
@@ -117,8 +119,8 @@ class SettingsBlueprint
 
             $fields[] = ['handle' => Options::key('fields', $handle), 'field' => [
                 'type' => 'checkboxes',
-                'display' => 'Campi compilati dall\'AI in «'.$collection->title().'»',
-                'instructions' => $options->isEmpty() ? 'Nessun campo compatibile: sono supportati testo, area di testo, markdown, scelte, numero e interruttore.' : null,
+                'display' => self::t('fields_label', ['collection' => $collection->title()]),
+                'instructions' => $options->isEmpty() ? self::t('no_fields') : null,
                 'options' => $options->all(),
                 'if' => $when,
             ]];

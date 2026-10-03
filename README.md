@@ -26,6 +26,10 @@ Everything can be configured from **Addons → PressCrew**, without touching any
 
 Values saved in the Control Panel (`resources/addons/statamic-adapter.yaml`) take precedence over `config/presscrew-adapter.php` and `.env`; an empty value falls back to the config file. Title, body and excerpt are always sent. If your routes are cached (`php artisan route:cache`), run `php artisan route:clear` after changing the route or turning the adapter on or off.
 
+## Languages
+
+The settings page is available in English and Italian and follows the language of the Control Panel user. To add a language, copy `lang/en/settings.php` to `lang/<locale>/settings.php` and translate it.
+
 ## Request
 
 `Authorization: Bearer <token>`, JSON body with `title`, `content` (Markdown), `status` (`draft`|`published`) and, optionally, `slug` and `date`, plus the fields listed under `fields` in the configuration. An existing `slug` updates that entry (response 200, otherwise 201).

@@ -69,12 +69,12 @@ class PublishController extends Controller
         ], $created ? 201 : 200);
     }
 
-    /** Valida i campi inviati da PressCrew con le regole del blueprint e li converte nel formato di salvataggio. */
+    /** Validates the fields sent by PressCrew with the blueprint rules and converts them to the storage format. */
     private function customFields(string $collection, array $target, array $values): array
     {
         $unknown = array_diff(array_keys($values), $target['fields']);
         if ($unknown !== []) {
-            throw ValidationException::withMessages(['fields' => ['Campi non abilitati: '.implode(', ', $unknown).'.']]);
+            throw ValidationException::withMessages(['fields' => ['Fields not enabled: '.implode(', ', $unknown).'.']]);
         }
 
         if ($values === []) {
@@ -82,21 +82,21 @@ class PublishController extends Controller
         }
 
         $blueprint = Collection::findByHandle($collection)->entryBlueprint($target['blueprint']);
-        abort_if($blueprint === null, 500, "Blueprint «{$target['blueprint']}» non trovato.");
+        abort_if($blueprint === null, 500, "Blueprint «{$target['blueprint']}» not found.");
 
         $fields = $blueprint->fields()->only(array_keys($values))->addValues($values);
         $fields->validate();
 
-        // Statamic non controlla né le opzioni delle select né character_limit (solo un contatore nell'editor).
+        // Statamic checks neither select options nor character_limit (the latter is only a counter in the editor).
         $errors = [];
         foreach ($values as $handle => $value) {
             $field = $blueprint->field($handle);
             $options = Targets::options($field);
             if ($options !== null && ! in_array((string) $value, array_column($options, 'value'), true)) {
-                $errors["fields.$handle"] = ["Valore non ammesso per «{$handle}»: scegli tra ".implode(', ', array_column($options, 'value')).'.'];
+                $errors["fields.$handle"] = ["Value not allowed for «{$handle}»: choose one of ".implode(', ', array_column($options, 'value')).'.'];
             }
             if (($max = $field->get('character_limit')) && mb_strlen((string) $value) > $max) {
-                $errors["fields.$handle"] = ["«{$handle}» supera i {$max} caratteri."];
+                $errors["fields.$handle"] = ["«{$handle}» exceeds {$max} characters."];
             }
         }
         if ($errors !== []) {

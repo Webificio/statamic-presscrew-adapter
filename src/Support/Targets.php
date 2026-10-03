@@ -8,7 +8,7 @@ use Statamic\Fields\Field;
 
 class Targets
 {
-    /** Tipi di campo che l'AI può compilare, e handle già gestiti direttamente dall'adapter. */
+    /** Field types the AI may fill in, and handles the adapter already handles itself. */
     public const TYPES = ['text', 'textarea', 'markdown', 'select', 'radio', 'button_group', 'integer', 'toggle'];
 
     public const RESERVED = ['id', 'title', 'slug', 'date', 'status', 'content', 'excerpt'];
@@ -16,16 +16,16 @@ class Targets
     public static function authorize(Request $request): void
     {
         $token = (string) Options::get('token');
-        abort_if($token === '' || ! hash_equals($token, (string) $request->bearerToken()), 401, 'Token non valido.');
+        abort_if($token === '' || ! hash_equals($token, (string) $request->bearerToken()), 401, 'Invalid token.');
     }
 
-    /** Collezioni a cui PressCrew può pubblicare: handle => ['blueprint' => ..., 'fields' => [handle, ...]]. */
+    /** Collections PressCrew may publish to: handle => ['blueprint' => ..., 'fields' => [handle, ...]]. */
     public static function all(): array
     {
         $config = config('presscrew-adapter');
         $saved = Options::saved();
 
-        // Pagina impostazioni del CP: collezioni scelte (ignorando quelle eliminate), blueprint e campi per ciascuna.
+        // Control Panel settings: chosen collections (skipping deleted ones), with blueprint and fields for each.
         $fromCp = collect($saved['collections'] ?? [])
             ->filter(fn ($handle) => Collection::findByHandle($handle))
             ->mapWithKeys(fn ($handle) => [$handle => [
@@ -41,7 +41,7 @@ class Targets
         return $config['collections'] ?: [$config['collection'] => ['blueprint' => $config['blueprint'], 'fields' => []]];
     }
 
-    /** Opzioni [['value', 'label']] dei campi a scelta, null per gli altri tipi. */
+    /** Options [['value', 'label']] of choice fields, null for other types. */
     public static function options(Field $field): ?array
     {
         if (! in_array($field->type(), ['select', 'radio', 'button_group'], true)) {
@@ -50,7 +50,7 @@ class Targets
 
         $result = [];
 
-        // Statamic salva le opzioni come [valore => etichetta], come elenco semplice o come elenco di ['key', 'value'].
+        // Statamic stores options as [value => label], as a plain list, or as a list of ['key', 'value'].
         foreach ((array) $field->get('options', []) as $key => $option) {
             if (is_array($option) && isset($option['key'])) {
                 $result[] = ['value' => (string) $option['key'], 'label' => (string) ($option['value'] ?? $option['key'])];

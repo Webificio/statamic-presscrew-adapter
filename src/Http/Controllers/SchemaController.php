@@ -19,10 +19,10 @@ class SchemaController extends Controller
 
         foreach (Targets::all() as $handle => $target) {
             $collection = Collection::findByHandle($handle);
-            abort_if($collection === null, 500, "Collezione «{$handle}» non trovata.");
+            abort_if($collection === null, 500, "Collection «{$handle}» not found.");
 
             $blueprint = $collection->entryBlueprint($target['blueprint']);
-            abort_if($blueprint === null, 500, "Blueprint «{$target['blueprint']}» non trovato nella collezione «{$handle}».");
+            abort_if($blueprint === null, 500, "Blueprint «{$target['blueprint']}» not found in collection «{$handle}».");
 
             $fields = collect($target['fields'])->map(fn ($name) => $blueprint->field($name))->filter();
             [$supported, $unsupported] = $fields->partition(fn (Field $field) => in_array($field->type(), Targets::TYPES, true));

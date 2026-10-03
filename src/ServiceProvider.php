@@ -20,7 +20,7 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../config/presscrew-adapter.php' => config_path('presscrew-adapter.php'),
         ], 'presscrew-adapter-config');
 
-        // Pagina impostazioni nel CP (Statamic 6.30+): i valori salvati prevalgono sul file di configurazione.
+        // Settings page in the Control Panel (Statamic 6.30+): saved values take precedence over the config file.
         $this->registerSettingsBlueprint(fn () => SettingsBlueprint::build());
 
         if (! Options::get('enabled')) {

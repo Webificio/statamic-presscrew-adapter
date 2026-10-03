@@ -5,13 +5,13 @@ namespace PressCrew\Adapter\Support;
 use Statamic\Facades\Addon;
 use Statamic\Facades\YAML;
 
-/** Opzioni dell'adapter: ciò che è salvato nella pagina impostazioni del CP ha la precedenza sul file di configurazione. */
+/** Adapter options: what is saved in the Control Panel settings page takes precedence over the config file. */
 class Options
 {
     /**
-     * Valori salvati dalla pagina impostazioni. Si legge il file YAML e non Addon::settings(), perché
-     * quest'ultimo costruisce il blueprint, che a sua volta legge i valori salvati (ricorsione infinita).
-     * ponytail: solo il repository a file di Statamic (resources/addons/<slug>.yaml).
+     * Values saved by the settings page. The YAML file is read directly instead of Addon::settings(), because
+     * the latter builds the blueprint, which in turn reads the saved values (infinite recursion).
+     * Limitation: only Statamic's file repository is supported (resources/addons/<slug>.yaml).
      */
     public static function saved(): array
     {
@@ -28,7 +28,7 @@ class Options
         return $saved !== null && $saved !== '' ? $saved : config("presscrew-adapter.$key");
     }
 
-    /** Handle di un campo del form per una collezione (gli handle dei campi non ammettono il trattino). */
+    /** Form field handle for a collection (field handles do not allow dashes). */
     public static function key(string $prefix, string $collection): string
     {
         return $prefix.'_'.str_replace('-', '_', $collection);
