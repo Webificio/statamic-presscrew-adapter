@@ -11,8 +11,6 @@ use Statamic\Fields\Field;
 
 class SchemaController extends Controller
 {
-    private const TYPES = ['text', 'textarea', 'markdown', 'select', 'radio', 'button_group', 'integer', 'toggle'];
-
     public function __invoke(Request $request): JsonResponse
     {
         Targets::authorize($request);
@@ -27,7 +25,7 @@ class SchemaController extends Controller
             abort_if($blueprint === null, 500, "Blueprint «{$target['blueprint']}» non trovato nella collezione «{$handle}».");
 
             $fields = collect($target['fields'])->map(fn ($name) => $blueprint->field($name))->filter();
-            [$supported, $unsupported] = $fields->partition(fn (Field $field) => in_array($field->type(), self::TYPES, true));
+            [$supported, $unsupported] = $fields->partition(fn (Field $field) => in_array($field->type(), Targets::TYPES, true));
 
             $collections[] = [
                 'handle' => $handle,

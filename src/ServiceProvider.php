@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Route;
 use PressCrew\Adapter\Http\Controllers\PublishController;
 use PressCrew\Adapter\Http\Controllers\SchemaController;
+use PressCrew\Adapter\Support\Options;
+use PressCrew\Adapter\Support\SettingsBlueprint;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -18,17 +20,20 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../config/presscrew-adapter.php' => config_path('presscrew-adapter.php'),
         ], 'presscrew-adapter-config');
 
-        if (! config('presscrew-adapter.enabled')) {
+        // Pagina impostazioni nel CP (Statamic 6.30+): i valori salvati prevalgono sul file di configurazione.
+        $this->registerSettingsBlueprint(fn () => SettingsBlueprint::build());
+
+        if (! Options::get('enabled')) {
             return;
         }
 
-        Route::middleware(['web', 'throttle:'.config('presscrew-adapter.throttle')])
+        Route::middleware(['web', 'throttle:'.Options::get('throttle')])
             ->withoutMiddleware(PreventRequestForgery::class)
-            ->post(config('presscrew-adapter.route'), PublishController::class)
+            ->post(Options::get('route'), PublishController::class)
             ->name('presscrew-adapter.publish');
 
-        Route::middleware(['web', 'throttle:'.config('presscrew-adapter.throttle')])
-            ->get(config('presscrew-adapter.route').'/schema', SchemaController::class)
+        Route::middleware(['web', 'throttle:'.Options::get('throttle')])
+            ->get(trim(Options::get('route'), '/').'/schema', SchemaController::class)
             ->name('presscrew-adapter.schema');
     }
 }
