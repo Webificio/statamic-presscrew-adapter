@@ -1,4 +1,4 @@
-# PressCrew Adapter
+# PressCrew
 
 Addon Statamic che riceve articoli dalla piattaforma PressCrew (`POST /webhooks/presscrew`) e li salva come bozza o pubblicati.
 
@@ -16,9 +16,11 @@ php artisan vendor:publish --tag=presscrew-adapter-config   # opzionale
 
 `Authorization: Bearer <token>`, corpo JSON con `title`, `content` (Markdown), `status` (`draft`|`published`) e, facoltativi, `slug`, `date`, più i campi elencati in `fields` nella configurazione. Uno `slug` già esistente aggiorna l'articolo (risposta 200, altrimenti 201).
 
+Non hai ancora un account PressCrew? Con il codice **PCSTATAMIC10** ottieni il 10% di sconto: [presscrew.it](https://presscrew.it).
+
 ## Impostazioni nel CP
 
-Da **Addons → PressCrew Adapter** (richiede Statamic 6.30+) si configura tutto senza toccare file:
+Da **Addons → PressCrew** (richiede Statamic 6.30+) si configura tutto senza toccare file:
 
 - **Connessione:** attiva/disattiva l'adapter, mostra URL del sito e rotta da incollare in PressCrew e propone un token già generato (valido dopo aver premuto Salva).
 - **Collezioni e campi:** si spuntano le collezioni a cui PressCrew può pubblicare e, per ciascuna, i campi del blueprint che l'AI può compilare. Si propongono solo i campi compatibili: testo, area di testo, markdown, select/radio/gruppo di pulsanti, numero, interruttore.

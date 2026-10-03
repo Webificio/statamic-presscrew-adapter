@@ -21,6 +21,12 @@ class SettingsBlueprint
         return ['tabs' => [
             'connection' => ['display' => 'Connessione', 'sections' => [[
                 'fields' => [
+                    ['handle' => 'discount', 'field' => [
+                        'type' => 'html',
+                        'display' => 'PressCrew',
+                        'html' => '<p>Non hai ancora un account? Con il codice <strong><code>PCSTATAMIC10</code></strong> ottieni il <strong>10% di sconto</strong> su PressCrew, la redazione AI che scrive nel tuo stile e pubblica su Statamic. '
+                            .'<a href="https://presscrew.it" target="_blank" rel="noopener"><strong><u>Scopri PressCrew →</u></strong></a></p>',
+                    ]],
                     ['handle' => 'info', 'field' => [
                         'type' => 'html',
                         'display' => 'Come collegare PressCrew',

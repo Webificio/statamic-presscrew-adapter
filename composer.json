@@ -1,6 +1,12 @@
 {
     "name": "presscrew/statamic-adapter",
-    "description": "PressCrew Adapter: riceve articoli dalla piattaforma PressCrew e li pubblica (o li salva in bozza) in una collezione Statamic.",
+    "description": "Receive articles from the PressCrew AI newsroom platform and publish them to Statamic collections.",
+    "authors": [
+        {
+            "name": "Gabriele Venturini",
+            "email": "iotivedo@gmail.com"
+        }
+    ],
     "type": "statamic-addon",
     "license": "proprietary",
     "require": {
@@ -14,8 +20,8 @@
     },
     "extra": {
         "statamic": {
-            "name": "PressCrew Adapter",
-            "description": "Riceve articoli dalla piattaforma PressCrew e li pubblica in Statamic"
+            "name": "PressCrew",
+            "description": "Publish AI-written articles from the PressCrew platform to your Statamic collections."
         },
         "laravel": {
             "providers": [
