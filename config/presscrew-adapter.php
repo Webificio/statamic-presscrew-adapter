@@ -16,6 +16,14 @@ return [
     'collection' => env('PRESSCREW_ADAPTER_COLLECTION', 'blog'),
     'blueprint' => env('PRESSCREW_ADAPTER_BLUEPRINT', 'articolo'),
 
+    // Collezioni a cui PressCrew può pubblicare, con i campi del blueprint che può compilare l'AI.
+    // Vuoto = solo la collezione qui sopra, senza campi compilati dall'AI. Lo schema è letto da GET <route>/schema.
+    // Tipi supportati: text, textarea, markdown, select, radio, button_group, integer, toggle.
+    // 'collections' => [
+    //     'blog' => ['blueprint' => 'articolo', 'fields' => ['seo_title', 'meta_description', 'category']],
+    // ],
+    'collections' => [],
+
     // Fuso orario per la data di default degli articoli.
     'timezone' => env('PRESSCREW_ADAPTER_TIMEZONE', config('app.timezone')),
 
