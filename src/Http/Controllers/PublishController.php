@@ -51,7 +51,9 @@ class PublishController extends Controller
         $entry ??= Entry::make()->collection($collection)->blueprint($target['blueprint'])->slug($slug);
 
         if ($created || isset($data['date'])) {
-            $entry->date(Carbon::parse($data['date'] ?? now(Options::get('timezone')))->format('Y-m-d'));
+            // Keep the time, in the configured time zone (PressCrew sends UTC): a date-only value shows every article at 00:00.
+            $timezone = Options::get('timezone');
+            $entry->date(($data['date'] ?? null ? Carbon::parse($data['date'])->setTimezone($timezone) : now($timezone))->format('Y-m-d H:i'));
         }
 
         $fields = collect($data)
