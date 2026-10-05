@@ -4,6 +4,7 @@ namespace PressCrew\Adapter;
 
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Route;
+use PressCrew\Adapter\Http\Controllers\AssetsController;
 use PressCrew\Adapter\Http\Controllers\PublishController;
 use PressCrew\Adapter\Http\Controllers\SchemaController;
 use PressCrew\Adapter\Support\Options;
@@ -35,5 +36,14 @@ class ServiceProvider extends AddonServiceProvider
         Route::middleware(['web', 'throttle:'.Options::get('throttle')])
             ->get(trim(Options::get('route'), '/').'/schema', SchemaController::class)
             ->name('presscrew-adapter.schema');
+
+        // Media library: browse and upload images (PressCrew's graphics desk).
+        Route::middleware(['web', 'throttle:'.Options::get('throttle')])
+            ->withoutMiddleware(PreventRequestForgery::class)
+            ->group(function () {
+                $path = trim(Options::get('route'), '/').'/assets';
+                Route::get($path, [AssetsController::class, 'index'])->name('presscrew-adapter.assets');
+                Route::post($path, [AssetsController::class, 'store'])->name('presscrew-adapter.assets.store');
+            });
     }
 }

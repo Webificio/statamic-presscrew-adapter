@@ -27,6 +27,10 @@ return [
     // Time zone for the default date of articles.
     'timezone' => env('PRESSCREW_ADAPTER_TIMEZONE', config('app.timezone')),
 
+    // Media library: asset container and folder where PressCrew uploads images (the container must exist).
+    'asset_container' => env('PRESSCREW_ADAPTER_ASSET_CONTAINER', 'assets'),
+    'asset_folder' => env('PRESSCREW_ADAPTER_ASSET_FOLDER', 'presscrew'),
+
     // Allowed categories. Empty array = the "category" field is not validated.
     'categories' => [],
 

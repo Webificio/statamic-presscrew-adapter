@@ -82,6 +82,18 @@ class SettingsBlueprint
                         'instructions' => self::t('timezone_instructions'),
                         'default' => $config['timezone'],
                     ]],
+                    ['handle' => 'asset_container', 'field' => [
+                        'type' => 'text',
+                        'display' => self::t('asset_container_label'),
+                        'instructions' => self::t('asset_container_instructions'),
+                        'default' => $config['asset_container'],
+                    ]],
+                    ['handle' => 'asset_folder', 'field' => [
+                        'type' => 'text',
+                        'display' => self::t('asset_folder_label'),
+                        'instructions' => self::t('asset_folder_instructions'),
+                        'default' => $config['asset_folder'],
+                    ]],
                 ],
             ]]],
         ]];

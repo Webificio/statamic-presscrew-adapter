@@ -31,4 +31,8 @@ return [
     'throttle_instructions' => 'Formato «richieste,minuti», ad esempio 30,1.',
     'timezone_label' => 'Fuso orario',
     'timezone_instructions' => 'Per la data degli articoli senza data, ad esempio Europe/Rome.',
+    'asset_container_label' => 'Contenitore degli asset',
+    'asset_container_instructions' => 'Libreria media in cui PressCrew cerca e carica le immagini, per handle (predefinito «assets»).',
+    'asset_folder_label' => 'Cartella di caricamento',
+    'asset_folder_instructions' => 'Cartella del contenitore che riceve le immagini caricate da PressCrew.',
 ];

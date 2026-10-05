@@ -47,3 +47,12 @@ The same choices can be made in the config file:
 - `GET /webhooks/presscrew/schema` (same token) returns, for each collection, its fields with type, label, instructions, select options and character limit. PressCrew reads it when you connect your site.
 - When publishing, PressCrew sends `collection` (optional, defaults to the first one) and `fields: {handle: value}`. Values are validated with the blueprint rules plus select options and `character_limit`; a field that is not enabled is rejected (422).
 - Without `collections`, only `collection`/`blueprint` are used, as before.
+
+## Media library
+
+PressCrew's graphics desk can browse and upload images in the site's media library:
+
+- `GET /webhooks/presscrew/assets?search=&page=` lists the images of the asset container (24 per page, newest first).
+- `POST /webhooks/presscrew/assets` (multipart: `file`, `name`, `alt`, `caption`) saves an image in the upload folder and returns its `id`, `url` and size. The same `name` is reused on a retry.
+
+Container and folder are set in **Addons → PressCrew → Advanced** (default container `assets`, folder `presscrew`; the container must exist) or with `PRESSCREW_ADAPTER_ASSET_CONTAINER` and `PRESSCREW_ADAPTER_ASSET_FOLDER`. Same token and rate limit as the other routes. PressCrew optimizes images (WebP, max 1600 px) before uploading them.

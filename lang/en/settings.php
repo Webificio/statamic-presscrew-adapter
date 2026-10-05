@@ -31,4 +31,8 @@ return [
     'throttle_instructions' => 'Format «requests,minutes», for example 30,1.',
     'timezone_label' => 'Time zone',
     'timezone_instructions' => 'Used for the date of articles sent without one, for example Europe/Rome.',
+    'asset_container_label' => 'Asset container',
+    'asset_container_instructions' => 'Media library PressCrew browses and uploads images to, by handle (default «assets»).',
+    'asset_folder_label' => 'Upload folder',
+    'asset_folder_instructions' => 'Folder of the container that receives the images uploaded by PressCrew.',
 ];
