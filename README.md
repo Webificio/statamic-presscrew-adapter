@@ -48,7 +48,7 @@ The same choices can be made in the config file:
 - When publishing, PressCrew sends `collection` (optional, defaults to the first one) and `fields: {handle: value}`. Values are validated with the blueprint rules plus select options and `character_limit`; a field that is not enabled is rejected (422).
 - Without `collections`, only `collection`/`blueprint` are used, as before.
 
-## Media library
+## Media library (version 1.1+)
 
 PressCrew's graphics desk can browse and upload images in the site's media library:
 
