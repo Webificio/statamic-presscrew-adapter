@@ -53,7 +53,8 @@ class PublishController extends Controller
         if ($created || isset($data['date'])) {
             // Keep the time, in the configured time zone (PressCrew sends UTC): a date-only value shows every article at 00:00.
             $timezone = Options::get('timezone');
-            $entry->date(($data['date'] ?? null ? Carbon::parse($data['date'])->setTimezone($timezone) : now($timezone))->format('Y-m-d H:i'));
+            // Pass a Carbon instance, not a string: Statamic 6.30 only parses 'Y-m-d-His' strings, so 'Y-m-d H:i' made every POST fail with a 500.
+            $entry->date($data['date'] ?? null ? Carbon::parse($data['date'])->setTimezone($timezone) : now($timezone));
         }
 
         $fields = collect($data)
