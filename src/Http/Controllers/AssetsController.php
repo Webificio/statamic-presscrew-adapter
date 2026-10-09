@@ -30,6 +30,7 @@ class AssetsController extends Controller
         $assets = $container->assets('/', true)
             ->filter(fn (AssetModel $a) => in_array(strtolower($a->extension()), self::EXTENSIONS, true))
             ->filter(fn (AssetModel $a) => $search === '' || str_contains(mb_strtolower($a->path()), $search))
+            ->reject(fn (AssetModel $a) => $this->isResizedCopy($a, $container))
             ->sortByDesc(fn (AssetModel $a) => $a->lastModified())
             ->forPage($page, self::PER_PAGE)
             ->map(fn (AssetModel $a) => $this->payload($a))
@@ -72,6 +73,14 @@ class AssetsController extends Controller
         $asset->save();
 
         return response()->json($this->payload($asset), $created ? 201 : 200);
+    }
+
+    /** «nome-660x630.jpg» is a thumbnail when «nome.jpg» is in the same container (sites migrated from WordPress keep both): only the original is listed. */
+    private function isResizedCopy(AssetModel $asset, Container $container): bool
+    {
+        $original = preg_replace('/-\d{2,5}x\d{2,5}(\.[^.\/]+)$/', '$1', $asset->path());
+
+        return $original !== $asset->path() && $container->asset($original) !== null;
     }
 
     private function container(): Container

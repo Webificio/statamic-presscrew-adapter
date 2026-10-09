@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- Media library: thumbnails and resized copies (`name-660x630.jpg` next to `name.jpg`) are no longer listed, only the original.
+
 ## 1.1.1
 
 - Fix: entry date is passed as a Carbon instance instead of a `Y-m-d H:i` string, which Statamic 6.30 rejects (every publish returned 500).
