@@ -50,6 +50,10 @@ class SchemaController extends Controller
             'max_length' => $field->get('character_limit') ?: null,
         ];
 
+        if ($field->type() === 'terms') {
+            $description['max_items'] = $field->get('max_items') ?: null;
+        }
+
         if (($options = Targets::options($field)) !== null) {
             $description['options'] = $options;
         }

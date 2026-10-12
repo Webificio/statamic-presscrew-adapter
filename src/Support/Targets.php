@@ -4,12 +4,13 @@ namespace PressCrew\Adapter\Support;
 
 use Illuminate\Http\Request;
 use Statamic\Facades\Collection;
+use Statamic\Facades\Term;
 use Statamic\Fields\Field;
 
 class Targets
 {
     /** Field types the AI may fill in, and handles the adapter already handles itself. */
-    public const TYPES = ['text', 'textarea', 'markdown', 'select', 'radio', 'button_group', 'integer', 'toggle'];
+    public const TYPES = ['text', 'textarea', 'markdown', 'select', 'radio', 'button_group', 'integer', 'toggle', 'terms'];
 
     public const RESERVED = ['id', 'title', 'slug', 'date', 'status', 'content', 'excerpt'];
 
@@ -44,6 +45,10 @@ class Targets
     /** Options [['value', 'label']] of choice fields, null for other types. */
     public static function options(Field $field): ?array
     {
+        if ($field->type() === 'terms') {
+            return self::terms($field);
+        }
+
         if (! in_array($field->type(), ['select', 'radio', 'button_group'], true)) {
             return null;
         }
@@ -60,6 +65,28 @@ class Targets
                 $result[] = ['value' => (string) $key, 'label' => (string) $option];
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * Terms of a taxonomy field (e.g. categories), as the field stores them: the slug, or "taxonomy::slug" when it spans several taxonomies.
+     */
+    private static function terms(Field $field): array
+    {
+        $taxonomies = (array) $field->get('taxonomies', []);
+        $result = [];
+
+        foreach ($taxonomies as $taxonomy) {
+            foreach (Term::query()->where('taxonomy', $taxonomy)->get() as $term) {
+                $result[] = [
+                    'value' => count($taxonomies) > 1 ? "{$taxonomy}::{$term->slug()}" : $term->slug(),
+                    'label' => (string) $term->title(),
+                ];
+            }
+        }
+
+        usort($result, fn ($a, $b) => strcmp($a['label'], $b['label']));
 
         return $result;
     }

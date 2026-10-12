@@ -23,7 +23,7 @@ return [
     'collections_label' => 'Collezioni',
     'blueprint_label' => 'Blueprint di «:collection»',
     'fields_label' => 'Campi compilati dall\'AI in «:collection»',
-    'no_fields' => 'Nessun campo compatibile: sono supportati testo, area di testo, markdown, scelte, numero e interruttore.',
+    'no_fields' => 'Nessun campo compatibile: sono supportati testo, area di testo, markdown, scelte, numero, interruttore e termini di tassonomia.',
 
     'route_label' => 'Rotta',
     'route_instructions' => 'Indirizzo che riceve gli articoli. Se le rotte sono in cache esegui `php artisan route:clear` dopo averla cambiata.',

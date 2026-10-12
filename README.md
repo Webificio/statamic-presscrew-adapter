@@ -21,7 +21,7 @@ Then open **Addons → PressCrew** in the Control Panel to configure everything,
 Everything can be configured from **Addons → PressCrew**, without touching any file:
 
 - **Connection:** turn the adapter on or off, see the site URL and route to paste into PressCrew, and get a ready-made token (it becomes valid once you press Save).
-- **Collections and fields:** tick the collections PressCrew may publish to and, for each one, the blueprint fields the AI may fill in. Only compatible fields are offered: text, textarea, markdown, select/radio/button group, integer and toggle.
+- **Collections and fields:** tick the collections PressCrew may publish to and, for each one, the blueprint fields the AI may fill in. Only compatible fields are offered: text, textarea, markdown, select/radio/button group, integer, toggle and taxonomy terms (e.g. categories).
 - **Advanced:** route, rate limit, time zone.
 
 Values saved in the Control Panel (`resources/addons/statamic-adapter.yaml`) take precedence over `config/presscrew-adapter.php` and `.env`; an empty value falls back to the config file. Title, body and excerpt are always sent. If your routes are cached (`php artisan route:cache`), run `php artisan route:clear` after changing the route or turning the adapter on or off.
@@ -46,6 +46,7 @@ The same choices can be made in the config file:
 
 - `GET /webhooks/presscrew/schema` (same token) returns, for each collection, its fields with type, label, instructions, select options and character limit. PressCrew reads it when you connect your site.
 - When publishing, PressCrew sends `collection` (optional, defaults to the first one) and `fields: {handle: value}`. Values are validated with the blueprint rules plus select options and `character_limit`; a field that is not enabled is rejected (422).
+- A taxonomy (terms) field lists the terms of its taxonomies as options (the slug, or `taxonomy::slug` when the field spans several), and accepts a list of them up to its `max_items`. PressCrew uses it for its category rules.
 - Without `collections`, only `collection`/`blueprint` are used, as before.
 
 ## Media library (version 1.1+)

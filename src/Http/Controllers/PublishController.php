@@ -95,10 +95,15 @@ class PublishController extends Controller
         foreach ($values as $handle => $value) {
             $field = $blueprint->field($handle);
             $options = Targets::options($field);
-            if ($options !== null && ! in_array((string) $value, array_column($options, 'value'), true)) {
+            // Taxonomy (terms) fields take a list; every item must be an existing term.
+            $chosen = is_array($value) ? $value : [$value];
+            if ($options !== null && array_diff(array_map('strval', $chosen), array_column($options, 'value')) !== []) {
                 $errors["fields.$handle"] = ["Value not allowed for «{$handle}»: choose one of ".implode(', ', array_column($options, 'value')).'.'];
             }
-            if (($max = $field->get('character_limit')) && mb_strlen((string) $value) > $max) {
+            if (($items = $field->get('max_items')) && count($chosen) > $items) {
+                $errors["fields.$handle"] = ["«{$handle}» takes at most {$items} values."];
+            }
+            if (! is_array($value) && ($max = $field->get('character_limit')) && mb_strlen((string) $value) > $max) {
                 $errors["fields.$handle"] = ["«{$handle}» exceeds {$max} characters."];
             }
         }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+- Taxonomy fields: a `terms` field (e.g. categories) can be enabled for PressCrew. The schema lists its terms as options (with `max_items`), and publishing accepts a list of existing terms. PressCrew uses it for its per-site category rules.
+
 ## 1.1.2
 
 - Media library: thumbnails and resized copies (`name-660x630.jpg` next to `name.jpg`) are no longer listed, only the original.

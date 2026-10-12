@@ -23,7 +23,7 @@ return [
     'collections_label' => 'Collections',
     'blueprint_label' => 'Blueprint of «:collection»',
     'fields_label' => 'Fields filled in by the AI in «:collection»',
-    'no_fields' => 'No compatible fields: text, textarea, markdown, choices, number and toggle are supported.',
+    'no_fields' => 'No compatible fields: text, textarea, markdown, choices, number, toggle and taxonomy terms are supported.',
 
     'route_label' => 'Route',
     'route_instructions' => 'Address that receives the articles. If routes are cached, run `php artisan route:clear` after changing it.',
